@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useConnect } from 'wagmi';
 import Navbar from "../components/Navbar";
 import Core from "../components/Core";
+import Upload from "../components/Upload";
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
@@ -16,7 +17,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-      <Core step={step} setStep={setStep} />
+      {/* <Core step={step} setStep={setStep} /> */}
+      <Upload />
 
     </div>
   )
