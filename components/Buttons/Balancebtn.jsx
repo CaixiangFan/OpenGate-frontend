@@ -94,7 +94,7 @@ function balancebtn() {
     <div>
       <div className=" font-epilogue">
         <div
-          className="p-2 bg-[#1A1B1F] rounded-[12px] flex  hover:cursor-pointer border-[1px] border-[#1b2133]"
+          className="p-2 bg-[#1A1B1F] rounded-[12px] flex flex-row hover:cursor-pointer border-[1px] border-[#1b2133]"
           onClick={() => setIsBalanceVisible(!isBalanceVisible)}
         >
           <FaCoins className="mr-2 mt-1" />

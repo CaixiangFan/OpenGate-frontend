@@ -24,7 +24,7 @@ function Navbar(props) {
 
   return (
     // <div className="font-epilogue mx-[1rem] my-4 2xl:mx-[4rem]">
-      <div className="flex flex-row justify-between ms-auto topcorner">
+      <div className="flex flex-row justify-between ms-auto">
         <div className="mr-3">
           <Balancebtn />
         </div>

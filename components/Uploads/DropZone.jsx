@@ -3,8 +3,11 @@ import Image from "next/image";
 import FilePreview from "./FilePreview";
 import styles from "../../styles/DropZone.module.css";
 import {BsUpload} from "react-icons/bs";
+import { useAccount } from "wagmi";
 
 const DropZone = ({ data, dispatch }) => {
+  const account = useAccount();
+
   // onDragEnter sets inDropZone to true
   const handleDragEnter = (e) => {
     e.preventDefault();
@@ -80,9 +83,11 @@ const DropZone = ({ data, dispatch }) => {
     // loop over files and add to formData
     files.forEach((file) => formData.append("files", file));
 
+    formData.append("id", "source-code-id-2");
+    formData.append("account", account.address);
     // Upload the files as a POST request to the server using fetch
     // Note: /api/fileupload is not a real endpoint, it is just an example
-    const response = await fetch("pages/api/fileupload", {
+    const response = await fetch("/api/fileupload", {
       method: "POST",
       body: formData,
     });
@@ -115,10 +120,10 @@ const DropZone = ({ data, dispatch }) => {
           className={styles.files}
           onChange={(e) => handleFileSelect(e)}
         />
-        <label htmlFor="fileSelect">You can select multiple Files</label>
+        <label htmlFor="fileSelect">You can only select one JS file</label>
 
         <h3 className={styles.uploadMessage}>
-          or drag &amp; drop your files here
+          or drag &amp; drop your file here
         </h3>
       </div>
       {/* Pass the selectect or dropped files as props */}
