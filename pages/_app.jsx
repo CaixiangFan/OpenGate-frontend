@@ -8,6 +8,44 @@ import {
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 
+const mumbai = {
+  id: 80001,
+  name: "Mumbai",
+  network: "Polygon Mumbai Testnet",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Matic",
+    symbol: "MATIC",
+  },
+  rpcUrls: {
+    public: { http: [process.env.NEXT_PUBLIC_MUMBAI_RPC_URL] },
+    default: { http: [process.env.NEXT_PUBLIC_MUMBAI_RPC_URL] },
+  },
+  blockExplorers: {
+    etherscan: { name: "polygonscan", url: "https://mumbai.polygonscan.com/" },
+    default: { name: "polygonscan", url: "https://mumbai.polygonscan.com/" },
+  },
+};
+
+const sepolia = {
+  id: 11155111,
+  name: "Sepolia",
+  network: "Sepolia Test Netwok",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ethereum",
+    symbol: "SepoliaETH",
+  },
+  rpcUrls: {
+    public: { http: [process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL] },
+    default: { http: [process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL] },
+  },
+  blockExplorers: {
+    etherscan: { name: "EtherScan", url: "https://sepolia.etherscan.io/" },
+    default: { name: "EtherScan", url: "https://sepolia.etherscan.io/" },
+  },
+};
+
 const scroll_alpha_testnet = {
   id: 534353,
   name: "Scroll Alpha Testnet",
@@ -80,6 +118,16 @@ const taiko = {
 
 const defaultChains = [
   {
+    ...mumbai,
+    iconUrl:
+      "https://raw.githubusercontent.com/zk-DELX/zkdelx-front/main/assets/mumbai.png",
+  },
+  {
+    ...sepolia,
+    iconUrl:
+      "https://raw.githubusercontent.com/zk-DELX/zkdelx-front/main/assets/sepolia.png",
+  },
+  {
     ...scroll_alpha_testnet,
     iconUrl:
       "https://raw.githubusercontent.com/zk-DELX/zkdelx-front/main/assets/scroll.png",
@@ -99,7 +147,7 @@ const defaultChains = [
 const { chains, provider } = configureChains(defaultChains, [publicProvider()]);
 
 const { connectors } = getDefaultWallets({
-  appName: "zkDelx",
+  appName: "chainlink-functions",
   chains,
 });
 
