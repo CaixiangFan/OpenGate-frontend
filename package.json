@@ -9,6 +9,7 @@
     "@polybase/auth": "^0.5.0",
     "@polybase/client": "^0.5.0",
     "@rainbow-me/rainbowkit": "^0.12.1",
+    "aztec.js": "^0.18.1",
     "ethers": "^5.7.2",
     "next": "latest",
     "react": "18.2.0",
