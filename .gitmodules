@@ -4,3 +4,6 @@
 [submodule "lib/functions-hardhat-starter-kit"]
 	path = lib/functions-hardhat-starter-kit
 	url = https://github.com/smartcontractkit/functions-hardhat-starter-kit
+[submodule "backend/lib/functions-hardhat-starter-kit"]
+	path = backend/lib/functions-hardhat-starter-kit
+	url = https://github.com/smartcontractkit/functions-hardhat-starter-kit
