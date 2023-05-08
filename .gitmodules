@@ -7,3 +7,6 @@
 [submodule "backend/lib/functions-hardhat-starter-kit"]
 	path = backend/lib/functions-hardhat-starter-kit
 	url = https://github.com/smartcontractkit/functions-hardhat-starter-kit
+[submodule "backend/lib/chainlink"]
+	path = backend/lib/chainlink
+	url = https://github.com/smartcontractkit/chainlink
