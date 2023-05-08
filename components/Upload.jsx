@@ -22,10 +22,8 @@ function Upload() {
   });
 
   return (
-    <div className={styles.container}>
-
+    <div>
         <DropZone data={data} dispatch={dispatch} />
-
     </div>
   );
 }
