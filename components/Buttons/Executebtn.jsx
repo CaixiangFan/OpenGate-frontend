@@ -21,7 +21,8 @@ function Executebtn() {
   }, [account.status]);
 
   const handleExecute = async() => {
-    const { data, block } = await collectionReference.record("source-code-id-1").get();
+    const id = "0x97da86b904fb0b62a05853078b5d4c5db744651abb0822b05fa38c31b7c4bae2";
+    const { data, block } = await collectionReference.record(id).get();
     console.log(data.functionStr)
   }
 

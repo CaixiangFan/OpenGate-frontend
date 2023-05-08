@@ -120,12 +120,12 @@ const defaultChains = [
   {
     ...mumbai,
     iconUrl:
-      "https://raw.githubusercontent.com/zk-DELX/zkdelx-front/main/assets/mumbai.png",
+      "https://github.com/CaixiangFan/chainlink-functions/blob/main/assets/mumbai.png?raw=true",
   },
   {
     ...sepolia,
     iconUrl:
-      "https://raw.githubusercontent.com/zk-DELX/zkdelx-front/main/assets/sepolia.png",
+      "https://github.com/CaixiangFan/chainlink-functions/blob/main/assets/sepolia.png?raw=true",
   },
   {
     ...scroll_alpha_testnet,

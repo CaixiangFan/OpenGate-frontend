@@ -82,8 +82,7 @@ const DropZone = ({ data, dispatch }) => {
     const formData = new FormData();
     // loop over files and add to formData
     files.forEach((file) => formData.append("files", file));
-
-    formData.append("id", "source-code-id-2");
+    // formData.append("id", "source-code-id-2");
     formData.append("account", account.address);
     // Upload the files as a POST request to the server using fetch
     // Note: /api/fileupload is not a real endpoint, it is just an example

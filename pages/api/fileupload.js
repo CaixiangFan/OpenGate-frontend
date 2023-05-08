@@ -1,6 +1,7 @@
 import { Polybase } from "@polybase/client";
 // import { Auth } from '@polybase/auth';
 import { ethPersonalSign } from '@polybase/eth'
+import { ethers } from "ethers";
 
 // const auth = new Auth();
 const db = new Polybase({
@@ -18,9 +19,8 @@ export default async function handler(req, res) {
   const collectionReference = db.collection("Function");
   
   const method = req.method;
-  const id = req.query.id;
+  // const id = req.query.id;
 
-  let result;
   switch(method) {
     case 'GET':
       // result = await 
@@ -28,8 +28,9 @@ export default async function handler(req, res) {
     case 'POST':
       const filename = req.body.split("filename=\"")[1].split("\"")[0].trim();
       const source = req.body.split("text/javascript")[1].split("------WebKit")[0].trim();
-      const id = req.body.split("name=\"id\"")[1].split("------WebKit")[0].trim();
+      // const id = req.body.split("name=\"id\"")[1].split("------WebKit")[0].trim();
       const account = req.body.split("name=\"account\"")[1].split("------WebKit")[0].trim();
+      const id = ethers.utils.id(source+account);
       const uploadTime = new Date();
       const recordData = await collectionReference.create([
         id, 

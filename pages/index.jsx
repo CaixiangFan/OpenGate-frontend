@@ -12,8 +12,8 @@ export default function Home() {
   const [step, setStep] = useState("TH");
 
   return (
-    <div className={styles.container}>
-      <Head>
+    <div>
+      <Head ssr={true}>
         <title>Chainlink functions</title>
         <link rel="icon" href="/favicon.ico" />
         <meta name="description" content="This is a description of chainlink functions." />

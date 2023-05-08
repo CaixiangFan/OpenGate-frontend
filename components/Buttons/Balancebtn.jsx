@@ -10,7 +10,7 @@ import USDT from "../../assets/USDT.png";
 import USDC from "../../assets/USDC.png";
 import DAI from "../../assets/DAI.png";
 
-function balancebtn() {
+function Balancebtn() {
   const { chain, chains } = getNetwork();
   const [connected, setConnected] = useState(false);
   const [isBalanceVisible, setIsBalanceVisible] = useState(false);
@@ -156,4 +156,4 @@ function balancebtn() {
   );
 }
 
-export default balancebtn;
+export default Balancebtn;
