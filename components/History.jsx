@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 
-function TXHistory() {
+function History() {
   const account = useAccount();
 
   useEffect(() => {
@@ -20,9 +20,9 @@ function TXHistory() {
 
   return (
     <div>
-      Transaction history
+      Source code history
     </div>
   );
 }
 
-export default TXHistory;
+export default History;

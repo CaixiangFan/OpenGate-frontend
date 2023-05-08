@@ -9,7 +9,7 @@ import Executebtn from '../components/Buttons/Executebtn';
 
 export default function Home() {
   const { connectors, connect } = useConnect();
-  const [step, setStep] = useState("TH");
+  const [step, setStep] = useState("Upload");
 
   return (
     <div>
@@ -21,11 +21,8 @@ export default function Home() {
         <meta name="author" content="chainlink functions" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <Navbar />
-      {/* <Core step={step} setStep={setStep} /> */}
-      <Upload />
-      <Executebtn />
-
+      <Navbar step={step} setStep={setStep} />
+      <Core step={step} setStep={setStep} />
     </div>
   )
 }

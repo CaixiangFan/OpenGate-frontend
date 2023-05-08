@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import Image from "next/image";
-import FilePreview from "./FilePreview";
 import styles from "../../styles/DropZone.module.css";
 import {BsUpload} from "react-icons/bs";
 import { useAccount } from "wagmi";
@@ -101,7 +99,7 @@ const DropZone = ({ data, dispatch }) => {
   };
 
   return (
-    <>
+    <div className="flex flex-col items-center">
       <div
         className={styles.dropzone}
         onDrop={(e) => handleDrop(e)}
@@ -109,31 +107,40 @@ const DropZone = ({ data, dispatch }) => {
         onDragEnter={(e) => handleDragEnter(e)}
         onDragLeave={(e) => handleDragLeave(e)}
       >
-        {/* <Image src="/upload.svg" alt="upload" height={50} width={50} /> */}
         <BsUpload size={50}/>
-
         <input
           id="fileSelect"
           type="file"
-          multiple
           className={styles.files}
           onChange={(e) => handleFileSelect(e)}
         />
-        <label htmlFor="fileSelect">You can only select one JS file</label>
+        <label htmlFor="fileSelect">Select one .JS file</label>
 
         <h3 className={styles.uploadMessage}>
           or drag &amp; drop your file here
         </h3>
       </div>
       {/* Pass the selectect or dropped files as props */}
-      <FilePreview fileData={data} />
-      {/* Only show upload button after selecting atleast 1 file */}
+      {/* <FilePreview fileData={data} className="self-center"/> */}
+      {data.fileList.map((f) => {
+          return (
+              <ol key={f.lastModified}>
+                <li className={styles.fileList}>
+                  {/* display the filename and type */}
+                  <div key={f.name} className={styles.fileName}>
+                    {f.name}
+                  </div>
+                </li>
+              </ol>
+          );
+        })}
+      {/* Only show upload button after selecting at least 1 file */}
       {data.fileList.length > 0 && (
         <button className={styles.uploadBtn} onClick={uploadFiles}>
           Upload
         </button>
       )}
-    </>
+    </div>
   );
 };
 
