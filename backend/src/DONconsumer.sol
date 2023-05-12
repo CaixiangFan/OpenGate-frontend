@@ -16,6 +16,8 @@ contract DONconsumer is FunctionsClient, ConfirmedOwner {
   bytes public latestResponse;
   bytes public latestError;
 
+  uint96 public fee;
+
   event OCRResponse(bytes32 indexed requestId, bytes result, bytes err);
 
   /**
@@ -81,5 +83,17 @@ contract DONconsumer is FunctionsClient, ConfirmedOwner {
 
   function addSimulatedRequestId(address oracleAddress, bytes32 requestId) public onlyOwner {
     addExternalRequest(oracleAddress, requestId);
+  }
+
+  /**
+   * @notice Estimate the cost of transaction
+   */
+  function getCostEstimate(
+    Functions.Request memory req,
+    uint64 subscriptionId,
+    uint32 gasLimit,
+    uint256 gasPrice
+  ) external view returns (uint96) {
+    return estimateCost(req, subscriptionId, gasLimit, gasPrice);
   }
 }
