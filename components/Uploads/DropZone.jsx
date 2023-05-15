@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import styles from "../../styles/DropZone.module.css";
 import {BsUpload} from "react-icons/bs";
 import { useAccount } from "wagmi";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const DropZone = ({ data, dispatch }) => {
   const account = useAccount();
-
+  const [estimatedCostReady, setEstimatedCostReady] = useState(false);
+  const [estimatedCost, setEstimatedCost] = useState(0);
   // onDragEnter sets inDropZone to true
   const handleDragEnter = (e) => {
     e.preventDefault();
@@ -29,6 +32,35 @@ const DropZone = ({ data, dispatch }) => {
     // set dropEffect to copy i.e copy of the source item
     e.dataTransfer.dropEffect = "copy";
     dispatch({ type: "SET_IN_DROP_ZONE", inDropZone: true });
+  };
+
+  const notify = (opt, msg) => {
+    const notifyObj = {
+      position: "top-center",
+      text: "19px",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    };
+    switch (opt) {
+      case "success":
+        toast.sucess(
+          msg,
+          {
+            ...notifyObj,
+            theme: "light",
+          }
+        );
+        break;
+      case "error":
+        // alert(msg);
+        toast.error(msg, notifyObj);
+        break;
+    }
   };
 
   // onDrop sets inDropZone to false and adds files to fileList
@@ -83,7 +115,6 @@ const DropZone = ({ data, dispatch }) => {
     // formData.append("id", "source-code-id-2");
     formData.append("account", account.address);
     // Upload the files as a POST request to the server using fetch
-    // Note: /api/fileupload is not a real endpoint, it is just an example
     const response = await fetch("/api/fileupload", {
       method: "POST",
       body: formData,
@@ -91,10 +122,18 @@ const DropZone = ({ data, dispatch }) => {
 
     //successful file upload
     if (response.ok) {
+      // notify("success", "Files uploaded successfully");
       alert("Files uploaded successfully");
+      // // get estimate cost in USD/DAI from api according to sourceId
+      // const estimatedExecutionCost = await fetch(`/api/estimatedExecutionCost/${souceId}`);
+      setEstimatedCostReady(true);
+      const estimatedExecutionCost = 100;
+      setEstimatedCost(estimatedExecutionCost);
     } else {
       // unsuccessful file upload
+      // notify("error", "Error uploading files");
       alert("Error uploading files");
+      setEstimatedCostReady(false);
     }
   };
 
@@ -121,7 +160,6 @@ const DropZone = ({ data, dispatch }) => {
         </h3>
       </div>
       {/* Pass the selectect or dropped files as props */}
-      {/* <FilePreview fileData={data} className="self-center"/> */}
       {data.fileList.map((f) => {
           return (
               <ol key={f.lastModified}>
@@ -139,6 +177,11 @@ const DropZone = ({ data, dispatch }) => {
         <button className={styles.uploadBtn} onClick={uploadFiles}>
           Upload
         </button>
+      )}
+      {estimatedCostReady && (
+        <div>
+          <p>EstimatedCost: {estimatedCost} USD.</p>
+        </div>
       )}
     </div>
   );

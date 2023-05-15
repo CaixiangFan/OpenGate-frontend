@@ -3,7 +3,7 @@ module.exports = {
   reactStrictMode: true,
   swcMinify: true,
   async rewrites() {
-    const DEFAULT_BACKEND_BASE_URL = "https://zkdelx-backend.vercel.app";
+    const DEFAULT_BACKEND_BASE_URL = "http://localhost:3002";
     const URL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? DEFAULT_BACKEND_BASE_URL;
     return [
       {

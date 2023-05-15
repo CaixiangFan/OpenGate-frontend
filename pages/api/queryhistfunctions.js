@@ -17,6 +17,7 @@ const db = new Polybase({
 
 export default async function handler(req, res) {
   const collectionReference = db.collection("Function");
+  const myFunctions = await collectionReference.where()
   
   const method = req.method;
   // const id = req.query.id;

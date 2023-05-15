@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { getAccount } from "@wagmi/core";
 
-function Searchbtn() {
+function Deletebtn() {
   const [connected, setConnected] = useState(false);
   const account = getAccount();
   const { openConnectModal } = useConnectModal();
@@ -26,4 +26,4 @@ function Searchbtn() {
   );
 }
 
-export default Searchbtn;
+export default Deletebtn;
