@@ -143,7 +143,7 @@ const Chains = [
   {
     ...besu,
     iconUrl:
-    "https://github.com/CaixiangFan/chainlink-functions/blob/main/assets/besu.png?raw=true",
+      "https://github.com/CaixiangFan/chainlink-functions/blob/main/assets/besu.png?raw=true",
   },
   // {
   //   ...scroll_alpha_testnet,
