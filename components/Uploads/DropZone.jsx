@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import styles from "../../styles/DropZone.module.css";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import {BsUpload} from "react-icons/bs";
 import { useAccount } from "wagmi";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const DropZone = ({ data, dispatch }) => {
+  const [connected, setConnected] = useState(false);
   const account = useAccount();
+  const { openConnectModal } = useConnectModal();
   const [estimatedCostReady, setEstimatedCostReady] = useState(false);
   const [estimatedCost, setEstimatedCost] = useState(0);
   // onDragEnter sets inDropZone to true
@@ -104,6 +107,10 @@ const DropZone = ({ data, dispatch }) => {
     }
   };
 
+  const handleConnectWallet = () => {
+    openConnectModal();
+    setConnected(!connected);
+  }
   // to handle file uploads
   const uploadFiles = async () => {
     // get the files from the fileList as an array
@@ -155,7 +162,7 @@ const DropZone = ({ data, dispatch }) => {
         />
         <label htmlFor="fileSelect">Select one .JS file</label>
 
-        <h3 className={styles.uploadMessage}>
+        <h3 className="mt-4">
           or drag &amp; drop your file here
         </h3>
       </div>
@@ -173,10 +180,13 @@ const DropZone = ({ data, dispatch }) => {
           );
         })}
       {/* Only show upload button after selecting at least 1 file */}
-      {data.fileList.length > 0 && (
-        <button className={styles.uploadBtn} onClick={uploadFiles}>
+      {data.fileList.length > 0 && connected &&(
+        <button className="mt-2 hover:bg-[#1E2132] hover:cursor-pointer py-3 px-4 rounded-[15px] bg-[#272933]" onClick={uploadFiles}>
           Upload
         </button>
+      )}
+      {data.fileList.length > 0 && !connected &&(
+        <button className="mt-2 hover:bg-[#1E2132] hover:cursor-pointer py-3 px-4 rounded-[15px] bg-[#272933]" onClick={handleConnectWallet}>Connect Wallet</button>
       )}
       {estimatedCostReady && (
         <div>

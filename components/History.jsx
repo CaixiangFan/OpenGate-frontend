@@ -26,20 +26,23 @@ function History() {
     <div>
       <div className=" mt-[1rem] 2xl:mt-[6rem] w-[550px] font-epilogue bg-[#0D111C] border-[1px] border-[#1b2133] p-4 rounded-[15px]">
         <div className="flex flex-row justify-between">
-          <div className="text-3xl">My functions</div>
+          <div className="text-3xl">Historical Functions</div>
+          <div className="text-3xl text-[#5285F6] font-bold text-[17px]">
+            {functions.length > 0 ? functions.length : <p>0</p>}
+          </div>
           <div className="hover:cursor-pointer">
             <BsInfoCircleFill />
           </div>
         </div>
 
-        <div
+        {/* <div
           className="w-[90%]  flex text-[17px] md:text-xl p-2 md:p-4 hover:cursor-pointer border-[1px] border-[#5285F6] rounded-md"
         >
           My Historical Functions
           <p className="ml-3 text-[#5285F6] font-bold text-[17px]">
             {functions.length > 0 ? functions.length : <p>0</p>}
           </p>
-        </div>
+        </div> */}
 
         
         {functions == "" && (

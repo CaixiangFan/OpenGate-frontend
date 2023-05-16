@@ -22,7 +22,7 @@ function Upload() {
   });
 
   return (
-    <div>
+    <div className=" mt-[1rem] 2xl:mt-[6rem] w-[550px] font-epilogue bg-[#0D111C] border-[1px] border-[#1b2133] p-4 rounded-[15px]">
         <DropZone data={data} dispatch={dispatch} />
     </div>
   );

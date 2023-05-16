@@ -76,7 +76,7 @@ function Navbar(props) {
       <div className="flex justify-center">
         <div
           onClick={() => setVisible(!visible)}
-          className="bg-[#0D111C] p-3 border-[1px] border-[#1b2133] rounded-[10px] mt-8 2xl:hidden w-[550px] flex justify-between font-kanit text-xl px-6"
+          className="hover:bg-[#1E2132] hover:cursor-pointer bg-[#0D111C] p-3 border-[1px] border-[#1b2133] rounded-[10px] mt-8 2xl:hidden w-[550px] flex justify-between font-kanit text-xl px-6"
         >
           Browse menu
           <div className="mt-1">
@@ -87,10 +87,10 @@ function Navbar(props) {
       {visible && (
         <div className="flex justify-center">
           <div className="bg-[#0D111C] p-3 border-[1px] border-[#1b2133] rounded-[10px] mt-1 2xl:hidden w-[550px]  font-kanit text-xl px-6">
-            <p className="mt-2" onClick={() => props.setStep("Upload")}>
+            <p className="hover:cursor-pointer mt-2" onClick={() => props.setStep("Upload")}>
               Upload
             </p>
-            <p className="mt-2" onClick={() => props.setStep("History")}>
+            <p className="hover:cursor-pointer mt-2" onClick={() => props.setStep("History")}>
               History
             </p>
           </div>
