@@ -12,6 +12,8 @@ function Function(props) {
   const [isopen, setIsopen] = useState(false);
   const [isExecuteVisible, setIsExecuteVisible] = useState(false);
   const [transferAmount, setTransferAmount] = useState(10);
+  const [transferSuccess, setTransferSuccess] = useState(true);
+  const [response, setResponse] = useState("default: 0x0000000000000000000000000002431");
 
   useEffect(() => {
     // const fetchData = async () => {
@@ -89,9 +91,9 @@ function Function(props) {
           </div>
 
           <div className="flex justify-between px-1 mt-4">
-            <div className="flex mt-2">
+            <div className="flex flex-col mt-2">
               <p className="text-xl font-bold flex ">Function:</p>
-              <p className="ml-2 ">
+              <p className="text-xs">
                 {props.functionStr} 
               </p>
             </div>
@@ -110,7 +112,7 @@ function Function(props) {
             </div>
             {isExecuteVisible && account.status == "connected" && (
               <div
-                className="fixed z-10 top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 backdrop-blur-md flex justify-center items-center"
+                className="flex fixed z-10 top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 backdrop-blur-md justify-center items-center"
               >
                 <div className="p-4 bg-[#1A1B1F] rounded-[15px] text-white  border-[0.1px] border-[#28292e] min-w-[340px]">
                   <div className="flex justify-between">
@@ -129,7 +131,7 @@ function Function(props) {
                     </div>
                   </div>
                   <div className="flex mt-4 ">
-                    <label htmlFor="amount" className="text-xl font-bold mt-2">Amount DAI:</label> 
+                    <label htmlFor="amount" className="text-lg font-bold mt-2">Amount DAI:</label> 
                     
                   </div>
                   <div className="flex justify-between mt-4 ">
@@ -139,8 +141,21 @@ function Function(props) {
                     </p> */}
                     <button className="bg-[#26365A] text-blue-400 hover:text-[#5285F6] rounded-[10px]" onClick={handleTransfer}>Transfer</button>
                   </div>
+                  { transferSuccess && (
+                    <div className="flex flex-col">
+                      <div className="mt-4 text-xl font-bold font-kanit">Latest Response</div>
+                      <div className="mt-3 p-2 flex bg-[#0f1421] rounded-[5px] border-[1px] border-[#26365A] text-[10px] md:text-[14px] text-slate-500 font-kanit">
+                        {response}
+                      </div>
+                      <div className="flex flex-row justify-between">
+                        <p className="ml-8 mt-2  text-blue-400 hover:text-[#5285F6] ">L2 TxLink </p>
+                        <p className="mr-8 mt-2  text-blue-400 hover:text-[#5285F6] ">L1 TxLink </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
+              
             )}
           </div>
         </div>
