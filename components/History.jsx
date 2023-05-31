@@ -6,15 +6,15 @@ import Function from "./Function";
 function History() {
   const account = useAccount();
   const [functions, setFunctions] = useState("");
+  const [functionNum, setFunctionNum] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("/api/queryhistoricalfunctions/" + account.address);
-        
         const data = await response.json();
-        console.log({data});
         setFunctions(data);
+        setFunctionNum(data.length)
       } catch {
         (e) => console.log(e);
       }
@@ -22,27 +22,22 @@ function History() {
     fetchData();
   }, []);
 
+  // const changeFuncNum = (newNum) => {
+  //   setFunctionNum(newNum);
+  // }
+
   return (
     <div>
       <div className=" mt-[1rem] 2xl:mt-[6rem] w-[550px] font-epilogue bg-[#0D111C] border-[1px] border-[#1b2133] p-4 rounded-[15px]">
         <div className="flex flex-row justify-between">
           <div className="text-3xl">Historical Functions</div>
           <div className="text-3xl text-[#5285F6] font-bold text-[17px]">
-            {functions.length > 0 ? functions.length : <p>0</p>}
+            {functionNum}
           </div>
           <div className="hover:cursor-pointer">
             <BsInfoCircleFill />
           </div>
         </div>
-
-        {/* <div
-          className="w-[90%]  flex text-[17px] md:text-xl p-2 md:p-4 hover:cursor-pointer border-[1px] border-[#5285F6] rounded-md"
-        >
-          My Historical Functions
-          <p className="ml-3 text-[#5285F6] font-bold text-[17px]">
-            {functions.length > 0 ? functions.length : <p>0</p>}
-          </p>
-        </div> */}
 
         
         {functions == "" && (
@@ -60,6 +55,8 @@ function History() {
               account={func.data.account}
               uploadTime={func.data.uploadTime}
               functionStr={func.data.functionStr}
+              // functionNum={functionNum}
+              // changeFunctionNum={changeFuncNum}
             />
           ))}
       </div>
