@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const DropZone = ({ data, dispatch }) => {
-  const [connected, setConnected] = useState(false);
   const account = useAccount();
   const { openConnectModal } = useConnectModal();
   const [estimatedCostReady, setEstimatedCostReady] = useState(false);
@@ -107,10 +106,6 @@ const DropZone = ({ data, dispatch }) => {
     }
   };
 
-  const handleConnectWallet = () => {
-    openConnectModal();
-    setConnected(!connected);
-  }
   // to handle file uploads
   const uploadFiles = async () => {
     // get the files from the fileList as an array
@@ -126,16 +121,31 @@ const DropZone = ({ data, dispatch }) => {
       method: "POST",
       body: formData,
     });
-
+    
     //successful file upload
     if (response.ok) {
       // notify("success", "Files uploaded successfully");
       alert("Files uploaded successfully");
-      // // get estimate cost in USD/DAI from api according to sourceId
-      // const estimatedExecutionCost = await fetch(`/api/estimatedExecutionCost/${souceId}`);
-      setEstimatedCostReady(true);
-      const estimatedExecutionCost = 100;
-      setEstimatedCost(estimatedExecutionCost);
+      
+      const fileReader = new FileReader();
+      fileReader.readAsText(files[0], "UTF-8");
+      fileReader.onload = async (e) => {
+        const contentSource = e.target.result;
+        // get estimate cost in USD/DAI from api according to sourceId
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              source: contentSource,
+              args: ["1", "bitcoin", "btc-bitcoin", "btc", "1000000", "450"],
+              secrets: { apiKey: "HDsofnsofnwofenwejf2840250mvsd" }
+            })
+          };
+        const estimatedCostResponse = await fetch("/api/estimatecost", requestOptions);
+        const estimatedCost = await estimatedCostResponse.json();
+        setEstimatedCostReady(true);
+        setEstimatedCost(estimatedCost);
+      };
     } else {
       // unsuccessful file upload
       // notify("error", "Error uploading files");
@@ -180,16 +190,16 @@ const DropZone = ({ data, dispatch }) => {
           );
         })}
       {/* Only show upload button after selecting at least 1 file */}
-      {data.fileList.length > 0 && connected &&(
+      {data.fileList.length > 0 && account.status === "connected" && (
         <button className="mt-2 hover:bg-[#1E2132] hover:cursor-pointer py-3 px-4 rounded-[15px] bg-[#272933]" onClick={uploadFiles}>
           Upload
         </button>
       )}
-      {data.fileList.length > 0 && !connected &&(
-        <button className="mt-2 hover:bg-[#1E2132] hover:cursor-pointer py-3 px-4 rounded-[15px] bg-[#272933]" onClick={handleConnectWallet}>Connect Wallet</button>
+      {data.fileList.length > 0 && account.status != "connected" &&(
+        <button className="mt-2 hover:bg-[#1E2132] hover:cursor-pointer py-3 px-4 rounded-[15px] bg-[#272933]" onClick={openConnectModal}>Connect Wallet</button>
       )}
       {estimatedCostReady && (
-        <div>
+        <div className="mt-2">
           <p>EstimatedCost: {estimatedCost} USD.</p>
         </div>
       )}
