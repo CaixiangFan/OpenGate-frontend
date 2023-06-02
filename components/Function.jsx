@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {RotatingLines} from "react-loader-spinner";
 import { 
   usePrepareContractWrite, 
   useContractWrite, 
@@ -24,6 +25,7 @@ function Function(props) {
   const [args, setArgs] = useState("arg1, arg2, arg3");
   const [secrets, setSecrets] = useState("{\"apiKey\": \"HDsofnsofnwofenwejf2840250mvsd\"}");
   const [estimatecost, setEstimatecost] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [transferSuccess, setTransferSuccess] = useState(true);
   const [response, setResponse] = useState("default: 0x0000000000000000000000000002431");
   const [deleteSuccess, setDeleteSuccess] = useState(false);
@@ -94,8 +96,26 @@ function Function(props) {
     setIsExecuteVisible(!isExecuteVisible);
   }
 
-  const handleTransfer = () => {
+  const handleTransfer = async () => {
+    setLoading(true);
     console.log(`Transfer ${transferAmount} tokens to execute this function...`);
+    console.log("Executing request after BesuDAI transfer is confirmed...");
+
+    // execute request through api
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source: props.functionStr,
+        args: ["1", "bitcoin", "btc-bitcoin", "btc", "1000000", "450"],
+        secrets: { apiKey: "HDsofnsofnwofenwejf2840250mvsd" }
+      })
+    };
+    const latestResponse = await fetch("/api/executerequest", requestOptions);
+    const latestResponseHex = await latestResponse.text();
+    console.log({latestResponseHex});
+    setResponse(latestResponseHex);
+    setLoading(false);
   }
 // ToDo: 1. add parameter input (args, secrets) form to a function card
 // 2. execute to get an updated estimatedCost and display on prompt diag
@@ -113,12 +133,12 @@ function Function(props) {
           </div>
           <div className="flex">
             <p className="mr-1 md:mr-2">{props.filename}</p>
-            <BsChevronDown className="text-blue-500 text-[24px] mt-[3px]" />
+            <BsChevronDown className="text-blue-500 text-[24px] hover:cursor-pointer mt-[3px]" />
           </div>
         </div>
       )}
       {isopen && !deleteSuccess && (
-        <div className="p-2 justify-between bg-[#0f1421] rounded-[10px] border-[1px] border-[#26365A] text-[15px] md:text-[18px] font-kanit hover:cursor-pointer mt-3">
+        <div className="p-2 justify-between bg-[#0f1421] rounded-[10px] border-[1px] border-[#26365A] text-[15px] md:text-[18px] font-kanit mt-3">
           <div>
             <div
               className="flex justify-between "
@@ -132,7 +152,7 @@ function Function(props) {
               </div>
               <div className="flex">
                 <p className="mr-1 md:mr-2">{props.filename}</p>
-                <BsChevronUp className="text-blue-500 mt-[1px]  text-[24px]" />
+                <BsChevronUp className="text-blue-500 mt-[1px] hover:cursor-pointer text-[24px]" />
               </div>
             </div>
           </div>
@@ -172,13 +192,13 @@ function Function(props) {
           <div className="flex justify-between mt-6 mx-2">
             <div 
               onClick={() => handleDeleteFunc(props.id)}
-              className="p-2  bg-red-600 text-white  rounded-[10px] mb-1">
+              className="p-2  bg-red-600 text-white hover:text-[#dcdee2] hover:cursor-pointer rounded-[10px] mb-1">
               Delete
             </div>
             <div 
               // disable={!writeConfirm}
               onClick={handleExecuteFunc}
-              className="p-2  bg-[#26365A] text-blue-400 hover:text-[#5285F6] rounded-[10px] mb-1">
+              className="p-2  bg-[#26365A] text-blue-400 hover:text-[#5285F6] hover:cursor-pointer rounded-[10px] mb-1">
               Execute
             </div>
             {isExecuteVisible && account.status == "connected" && (
@@ -214,17 +234,28 @@ function Function(props) {
                     {/* <p className="text-xl font-bold mt-2">
                       Estimated value
                     </p> */}
-                    <button className="bg-[#26365A] text-blue-400 hover:text-[#5285F6] rounded-[10px]" disabled={!executeWrite} onClick={() => {executeWrite?.();}}>Transfer</button>
+                    <button className="bg-[#26365A] text-blue-400 hover:text-[#5285F6] rounded-[10px]" onClick={handleTransfer}>Transfer</button>
                   </div>
                   { transferSuccess && (
                     <div className="flex flex-col">
-                      <div className="mt-4 text-xl font-bold font-kanit">Latest Response</div>
-                      <div className="mt-3 p-2 flex bg-[#0f1421] rounded-[5px] border-[1px] border-[#26365A] text-[10px] md:text-[14px] text-slate-500 font-kanit">
-                        {response}
+                      <div className="flex justify-between mt-4">
+                        <div className=" text-xl font-bold font-kanit">Latest Response</div>
+                        <RotatingLines
+                          strokeColor="grey"
+                          strokeWidth="5"
+                          animationDuration="0.75"
+                          width="30"
+                          visible={loading}
+                        />
                       </div>
+
+                      {/* <div className="mt-3 p-2 flex bg-[#0f1421] rounded-[5px] border-[1px] border-[#26365A] text-[10px] md:text-[14px] text-slate-500 font-kanit">
+                        {response}
+                      </div> */}
+                      <textarea value={response} readonly="readonly" className="mt-3 p-2 flex bg-[#0f1421] rounded-[5px] border-[1px] border-[#26365A] text-[10px] md:text-[14px] text-slate-500 font-kanit" />
                       <div className="flex flex-row justify-between">
-                        <p className="ml-8 mt-2  text-blue-400 hover:text-[#5285F6] ">L2 TxLink </p>
-                        <p className="mr-8 mt-2  text-blue-400 hover:text-[#5285F6] ">L1 TxLink </p>
+                        <p className="ml-8 mt-2  text-blue-400 hover:text-[#5285F6] hover: cursor-pointer ">L2 TxLink </p>
+                        <p className="mr-8 mt-2  text-blue-400 hover:text-[#5285F6] hover: cursor-pointer ">L1 TxLink </p>
                       </div>
                     </div>
                   )}
