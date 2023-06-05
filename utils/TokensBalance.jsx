@@ -6,9 +6,9 @@ const DAI_Poly = [
   {
     name: "DAI",
     image: DAI,
-    chainName: "polyZK",
-    chainId: "1442",
-    address: "0x0cdA85ADE5C84C386B69b562d1722642748DD194",
+    chainName: "Besu private net",
+    chainId: "1337",
+    address: "0x00fFD3548725459255f1e78A61A07f1539Db0271",
     decimal: 10 ** 18
   },
 ];
@@ -17,8 +17,8 @@ const USDT_Poly = [
   {
     name: "USDT",
     image: USDT,
-    chainName: "polyZK",
-    chainId: "1442",
+    chainName: "Besu private net",
+    chainId: "1337",
     address: "0x390172F6Cc152f19132Bd9919550b59f45F89042",
     decimal: 10 ** 18
   },
@@ -28,8 +28,8 @@ const USDC_Poly = [
   {
     name: "USDC",
     image: USDC,
-    chainName: "polyZK",
-    chainId: "1442",
+    chainName: "Besu private net",
+    chainId: "1337",
     address: "0x93733225CCc07Ba02b1449aA3379418Ddc37F6EC",
     decimal: 10 ** 18
   },

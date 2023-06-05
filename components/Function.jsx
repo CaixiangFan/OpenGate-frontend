@@ -7,6 +7,7 @@ import {
   useNetwork,
   useAccount 
 } from "wagmi";
+import { BigNumber } from "ethers";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { BsChevronDown, BsChevronUp, BsInputCursor } from "react-icons/bs";
 import { BiTime, BiKey } from "react-icons/bi";
@@ -15,23 +16,24 @@ import { DiJavascript1 } from "react-icons/di";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { Polybase } from "@polybase/client";
 import useDebounce from "../utils/useDebounce";
-import * as DONconsumerAbi from "../src/DONconsumer.json";
+import BesuDAI from "../src/BesuDAI.json";
 
 function Function(props) {
   const account = useAccount();
   const [isopen, setIsopen] = useState(false);
   const [isExecuteVisible, setIsExecuteVisible] = useState(false);
-  const [transferAmount, setTransferAmount] = useState(10);
-  const [args, setArgs] = useState("arg1, arg2, arg3");
+  const [transferAmount, setTransferAmount] = useState(0);
+  const [args, setArgs] = useState("1, bitcoin, btc-bitcoin, btc, 1000000, 450");
   const [secrets, setSecrets] = useState("{\"apiKey\": \"HDsofnsofnwofenwejf2840250mvsd\"}");
   const [estimatecost, setEstimatecost] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [transferSuccess, setTransferSuccess] = useState(true);
+  const [transferButtonAvailable, setTransferButtonAvailable] = useState(false);
   const [response, setResponse] = useState("default: 0x0000000000000000000000000002431");
+  const [l1TxUrl, setL1TxUrl] = useState('');
+  const [l2TxUrl, setL2TxUrl] = useState('');
   const [deleteSuccess, setDeleteSuccess] = useState(false);
-  const debSource = useDebounce(props.functionStr);
-  const debSubId = useDebounce(+process.env.NEXT_PUBLIC_SUB_ID);
-  const debGasLimit = useDebounce(+process.env.NEXT_PUBLIC_GAS_LIMIT);
+  const debToAccount = useDebounce(process.env.NEXT_PUBLIC_PROXY_ACCOUNT, 500);
+  const debAmount = useDebounce(+transferAmount, 500);
 
   const db = new Polybase({
     defaultNamespace: process.env.NEXT_PUBLIC_POLYBASE_NAME_SPACE ?? '',
@@ -47,19 +49,21 @@ function Function(props) {
     }
   });
 
-  const { config: executeConfig, error: executeConfigError } = usePrepareContractWrite({
-    address: process.env.NEXT_PUBLIC_CONSUMER_CONTRACT_ADDRESS,
-    abi: DONconsumerAbi.abi,
+  const tokenDecimal = 1e18;
+  const bnTransferAmount = BigNumber.from(String(debAmount * tokenDecimal));
+  const { config: transferConfig, error: transferConfigError } = usePrepareContractWrite({
+    address: process.env.NEXT_PUBLIC_BESUDAI_ADDRESS,
+    abi: BesuDAI.abi,
     chainId: 1337,
-    functionName: 'executeRequest',
-    args: [debSource, secrets, args.split(", "), debSubId, debGasLimit],
-    enabled: Boolean(debSource),
+    functionName: 'transfer',
+    args: [debToAccount, bnTransferAmount],
+    enabled: Boolean(debToAccount),
   });
 
-  const { data: executeData, write: executeWrite, isError: executeIsError } = useContractWrite(executeConfig);
-  console.log({executeConfigError})
-  const { isLoading: executeIsLoading, isSuccess: executeIsSuccess } = useWaitForTransaction({
-  hash: executeData?.hash,
+  const { data: transferData, write: transferWrite, isError: transferIsError } = useContractWrite(transferConfig);
+  console.log({transferConfigError})
+  const { isLoading: executeIsLoading, isSuccess: transferIsSuccess } = useWaitForTransaction({
+  hash: transferData?.hash,
   });
 
   const requestEstimateCost = async () => {
@@ -87,39 +91,83 @@ function Function(props) {
       console.log(error);
     }
   }
+  
+  /**
+   * Returns the Etherscan API domain for a given chainId.
+   *
+   * @param chainId Ethereum chain ID
+   */
+  const getEtherscanURL = (chainId) => {
+    const BASE_URLS = {
+      1: "https://etherscan.io/",
+      137: "https://polygonscan.com/",
+      1337: "http://localhost:25000/explorer/explorer",
+      80001: "https://mumbai.polygonscan.com/",
+      11155111: "https://sepolia.etherscan.io/",
+    };
+    const idNotFound = !Object.keys(BASE_URLS).includes(chainId.toString());
+    if (idNotFound) {
+      throw new Error("Invalid chain Id")
+    }
+    return BASE_URLS[chainId]
+  }
+
+  const handleSetTransferAmount = () => {
+    const sendAmount = +document.getElementById("amount").value;
+    if(sendAmount > estimatecost) {
+      setTransferAmount(sendAmount);
+      setTransferButtonAvailable(true);
+    } else {
+      alert("Not engough fees!")
+    }
+  }
 
   const handleExecuteFunc = async () => {
     console.log("Executing current function...");
     const estimation = await requestEstimateCost();
     setEstimatecost(estimation);
     setTransferAmount(Math.ceil(estimation));
+    setTransferButtonAvailable(true);
     setIsExecuteVisible(!isExecuteVisible);
   }
 
-  const handleTransfer = async () => {
-    setLoading(true);
-    console.log(`Transfer ${transferAmount} tokens to execute this function...`);
-    console.log("Executing request after BesuDAI transfer is confirmed...");
+  useEffect(() => {
+    if(transferIsSuccess) {
+      const tx2Url = getEtherscanURL(1337) + "tx/" + transferData?.hash;
+      setL2TxUrl(tx2Url)
+      console.log(l2TxUrl);
 
-    // execute request through api
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        source: props.functionStr,
-        args: ["1", "bitcoin", "btc-bitcoin", "btc", "1000000", "450"],
-        secrets: { apiKey: "HDsofnsofnwofenwejf2840250mvsd" }
-      })
-    };
-    const latestResponse = await fetch("/api/executerequest", requestOptions);
-    const latestResponseHex = await latestResponse.text();
-    console.log({latestResponseHex});
-    setResponse(latestResponseHex);
-    setLoading(false);
-  }
-// ToDo: 1. add parameter input (args, secrets) form to a function card
-// 2. execute to get an updated estimatedCost and display on prompt diag
-// 3. Transfer token to execute the function and get the latest response
+      const executeRequest = async () => {
+        if(transferAmount < estimatecost) {
+          alert("Not enough execution fees!");
+          return
+        }
+        setLoading(true);
+        console.log(`Transfer ${transferAmount} tokens to execute this function...`);
+        console.log("Executing request after BesuDAI transfer is confirmed...");
+    
+        // execute request through api
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            source: props.functionStr,
+            args: args.split(", "),
+            secrets: { apiKey: "HDsofnsofnwofenwejf2840250mvsd" }
+          })
+        };
+        const latestResponse = await fetch("/api/executerequest", requestOptions);
+        const latestResponseJson = await latestResponse.json();
+        console.log(latestResponseJson);
+        setResponse(latestResponseJson.data);
+        setLoading(false);
+        const tx1Url = getEtherscanURL(80001) + "tx/" + latestResponseJson.txHash;
+        setL1TxUrl(tx1Url);
+      }
+      executeRequest();
+    }
+  }, [transferIsSuccess]);
+
   return (
     <div>
       {!isopen && (
@@ -169,7 +217,8 @@ function Function(props) {
               <p className="mr-2 underline">Arguments: </p>
               <input type="string" id="args" value={args} 
               onChange={() => {setArgs(document.getElementById("args").value)}} 
-              className="mt-1 rounded-md indent-2 placeholder-slate-400 text-black"/>
+              className="mt-1 ml-2 rounded-md indent-2 placeholder-slate-400 w-80 text-black "
+              />
             </p>
           </div>
           <div className="flex justify mt-2">
@@ -178,7 +227,7 @@ function Function(props) {
               <p className="mr-2 underline">Secrets(opt): </p>
               <input type="string" id="secrets" value={secrets} 
               onChange={() => {setSecrets(document.getElementById("secrets").value)}} 
-              className="mt-1 rounded-md indent-2 placeholder-slate-400 text-black"/>
+              className="mt-1 rounded-md indent-2 w-80 placeholder-slate-400 text-black"/>
             </p>
           </div>
           <div className="flex justify-between px-1 mt-4">
@@ -230,13 +279,13 @@ function Function(props) {
                     
                   </div>
                   <div className="flex justify-between mt-4 ">
-                    <input type="number" id="amount" value={transferAmount} onChange={() => {setTransferAmount(document.getElementById("amount").value)}} className="mt-1 rounded-md indent-2 placeholder-slate-400 text-black"/>
+                    <input type="number" id="amount" defaultValue={transferAmount} onChange={handleSetTransferAmount} className="mt-1 rounded-md indent-2 placeholder-slate-400 text-black"/>
                     {/* <p className="text-xl font-bold mt-2">
                       Estimated value
                     </p> */}
-                    <button className="bg-[#26365A] text-blue-400 hover:text-[#5285F6] rounded-[10px]" onClick={handleTransfer}>Transfer</button>
+                    <button className="bg-[#26365A] text-blue-400 hover:text-[#5285F6] hover:cursor-pointer rounded-[10px]" disabled={!transferWrite || !transferButtonAvailable} onClick={() => transferWrite?.()}>Transfer</button>
                   </div>
-                  { transferSuccess && (
+                  { transferIsSuccess && (
                     <div className="flex flex-col">
                       <div className="flex justify-between mt-4">
                         <div className=" text-xl font-bold font-kanit">Latest Response</div>
@@ -252,10 +301,10 @@ function Function(props) {
                       {/* <div className="mt-3 p-2 flex bg-[#0f1421] rounded-[5px] border-[1px] border-[#26365A] text-[10px] md:text-[14px] text-slate-500 font-kanit">
                         {response}
                       </div> */}
-                      <textarea value={response} readonly="readonly" className="mt-3 p-2 flex bg-[#0f1421] rounded-[5px] border-[1px] border-[#26365A] text-[10px] md:text-[14px] text-slate-500 font-kanit" />
+                      <textarea value={response} readonly="readonly" onChange={() => {console.log(response)}} className="mt-3 p-2 flex bg-[#0f1421] rounded-[5px] border-[1px] border-[#26365A] text-[10px] md:text-[14px] text-slate-500 font-kanit" />
                       <div className="flex flex-row justify-between">
-                        <p className="ml-8 mt-2  text-blue-400 hover:text-[#5285F6] hover: cursor-pointer ">L2 TxLink </p>
-                        <p className="mr-8 mt-2  text-blue-400 hover:text-[#5285F6] hover: cursor-pointer ">L1 TxLink </p>
+                        <p className="ml-8 mt-2  text-blue-400 hover:text-[#5285F6] hover: cursor-pointer "><a href={l1TxUrl} target="_blank">L1 TxLink</a> </p>
+                        <p className="mr-8 mt-2  text-blue-400 hover:text-[#5285F6] hover: cursor-pointer ">L2 TxLink </p>
                       </div>
                     </div>
                   )}

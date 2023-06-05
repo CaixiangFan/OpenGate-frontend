@@ -25,7 +25,7 @@ function Balancebtn() {
     const intervalId = setInterval(async () => {
       async function checkBalance() {
         // For Scroll
-        if (account.status == "connected" && chain.id == 534353) {
+        if (account.status == "connected" && chain.id == 1337) {
           try {
             const DAIBalance = await fetchBalance({
               address: account.address,
@@ -46,6 +46,7 @@ function Balancebtn() {
             });
           } catch (e) {
             console.log("fetching balance");
+            console.log(e);
           }
           // console.log(balances);
         }
