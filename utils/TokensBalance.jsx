@@ -39,9 +39,9 @@ const DAI_Scroll = [
   {
     name: "DAI",
     image: DAI,
-    chainName: "Scroll",
-    chainId: "1442",
-    address: "0x37d06B6d5B8a7b0cB0385a210BE8fC0CC63654D9",
+    chainName: "Besu private net",
+    chainId: "1337",
+    address: "0x00fFD3548725459255f1e78A61A07f1539Db0271",
     decimal: 10 ** 18
   },
 ];
