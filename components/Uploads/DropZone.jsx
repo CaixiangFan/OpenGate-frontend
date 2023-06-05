@@ -125,9 +125,7 @@ const DropZone = ({ data, dispatch }) => {
     
     //successful file upload
     if (response.ok) {
-      // notify("success", "Files uploaded successfully");
-      alert("Files uploaded successfully");
-      
+      notify("success", "Files upload success!");      
       const fileReader = new FileReader();
       fileReader.readAsText(files[0], "UTF-8");
       fileReader.onload = async (e) => {

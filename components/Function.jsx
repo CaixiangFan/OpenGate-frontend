@@ -339,10 +339,10 @@ function Function(props) {
                       {/* <div className="mt-3 p-2 flex bg-[#0f1421] rounded-[5px] border-[1px] border-[#26365A] text-[10px] md:text-[14px] text-slate-500 font-kanit">
                         {response}
                       </div> */}
-                      <textarea value={response} readonly="readonly" onChange={() => {console.log(response)}} className="mt-3 p-2 flex bg-[#0f1421] rounded-[5px] border-[1px] border-[#26365A] text-[10px] md:text-[14px] text-slate-500 font-kanit" />
+                      <textarea value={response} readOnly="readOnly" onChange={() => {console.log(response)}} className="mt-3 p-2 flex bg-[#0f1421] rounded-[5px] border-[1px] border-[#26365A] text-[10px] md:text-[14px] text-slate-500 font-kanit" />
                       <div className="flex flex-row justify-between">
                         <p className="ml-8 mt-2  text-blue-400 hover:text-[#5285F6] hover: cursor-pointer "><a href={l1TxUrl} target="_blank">L1 TxLink</a> </p>
-                        <p className="mr-8 mt-2  text-blue-400 hover:text-[#5285F6] hover: cursor-pointer ">L2 TxLink </p>
+                        <p className="mr-8 mt-2  text-blue-400 hover:text-[#5285F6] hover: cursor-pointer "><a href={l2TxUrl} target="_blank">L2 TxLink</a></p>
                       </div>
                     </div>
                   )}
