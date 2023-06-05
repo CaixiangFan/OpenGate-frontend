@@ -3,7 +3,7 @@ import styles from "../../styles/DropZone.module.css";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import {BsUpload} from "react-icons/bs";
 import { useAccount } from "wagmi";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const DropZone = ({ data, dispatch }) => {
@@ -48,9 +48,10 @@ const DropZone = ({ data, dispatch }) => {
       progress: undefined,
       theme: "dark",
     };
+    
     switch (opt) {
       case "success":
-        toast.sucess(
+        toast.success(
           msg,
           {
             ...notifyObj,
@@ -148,14 +149,15 @@ const DropZone = ({ data, dispatch }) => {
       };
     } else {
       // unsuccessful file upload
-      // notify("error", "Error uploading files");
-      alert("Error uploading files");
+      notify("error", "Error uploading files");
+      // alert("Error uploading files");
       setEstimatedCostReady(false);
     }
   };
 
   return (
     <div className="flex flex-col items-center">
+      <ToastContainer position="top-left"/>
       <div
         className={styles.dropzone}
         onDrop={(e) => handleDrop(e)}

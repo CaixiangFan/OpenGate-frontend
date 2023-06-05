@@ -24,58 +24,56 @@ function Balancebtn() {
   useEffect(() => {
     const intervalId = setInterval(async () => {
       async function checkBalance() {
-        // For Scroll
+        // For Besu
         if (account.status == "connected" && chain.id == 1337) {
           try {
             const DAIBalance = await fetchBalance({
               address: account.address,
               token: Tokens[0][0][0].address,
             });
-            const USDTBalance = await fetchBalance({
-              address: account.address,
-              token: Tokens[0][1][0].address,
-            });
-            const USDCBalance = await fetchBalance({
-              address: account.address,
-              token: Tokens[0][2][0].address,
-            });
+            // const USDTBalance = await fetchBalance({
+            //   address: account.address,
+            //   token: Tokens[0][1][0].address,
+            // });
+            // const USDCBalance = await fetchBalance({
+            //   address: account.address,
+            //   token: Tokens[0][2][0].address,
+            // });
             setBalances({
               dai: DAIBalance,
-              usdt: USDTBalance,
-              usdc: USDCBalance,
+              usdt: 0,
+              usdc: 0,
             });
           } catch (e) {
             console.log("fetching balance");
-            console.log(e);
           }
-          // console.log(balances);
         }
 
-        // For PolyZK
-        if (account.status == "connected" && chain.id == 1442) {
-          try {
-            const DAIBalance = await fetchBalance({
-              address: account.address,
-              token: Tokens[1][0][0].address,
-            });
-            const USDTBalance = await fetchBalance({
-              address: account.address,
-              token: Tokens[1][1][0].address,
-            });
-            const USDCBalance = await fetchBalance({
-              address: account.address,
-              token: Tokens[1][2][0].address,
-            });
-            setBalances({
-              dai: DAIBalance,
-              usdt: USDTBalance,
-              usdc: USDCBalance,
-            });
-            // console.log(balances);
-          } catch (e) {
-            console.log("fetching balance");
-          }
-        }
+        // For Other L2
+        // if (account.status == "connected" && chain.id == 1442) {
+        //   try {
+        //     const DAIBalance = await fetchBalance({
+        //       address: account.address,
+        //       token: Tokens[1][0][0].address,
+        //     });
+        //     const USDTBalance = await fetchBalance({
+        //       address: account.address,
+        //       token: Tokens[1][1][0].address,
+        //     });
+        //     const USDCBalance = await fetchBalance({
+        //       address: account.address,
+        //       token: Tokens[1][2][0].address,
+        //     });
+        //     setBalances({
+        //       dai: DAIBalance,
+        //       usdt: USDTBalance,
+        //       usdc: USDCBalance,
+        //     });
+        //     // console.log(balances);
+        //   } catch (e) {
+        //     console.log("fetching balance");
+        //   }
+        // }
       }
       checkBalance();
     }, 3000);

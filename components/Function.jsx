@@ -17,6 +17,8 @@ import { RiErrorWarningLine } from "react-icons/ri";
 import { Polybase } from "@polybase/client";
 import useDebounce from "../utils/useDebounce";
 import BesuDAI from "../src/BesuDAI.json";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Function(props) {
   const account = useAccount();
@@ -42,9 +44,41 @@ function Function(props) {
   const formatWallet = (wallet) => {
     return `${wallet.substr(0, 6)}...${wallet.substr(-6)}`;
   }
+
+  const notify = (opt, msg) => {
+    const notifyObj = {
+      position: "top-center",
+      text: "19px",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    };
+    
+    switch (opt) {
+      case "success":
+        toast.success(
+          msg,
+          {
+            ...notifyObj,
+            theme: "light",
+          }
+        );
+        break;
+      case "error":
+        // alert(msg);
+        toast.error(msg, notifyObj);
+        break;
+    }
+  };
+
   useEffect(() => {
     if (deleteSuccess) {
-      alert("Deleted successful!");
+      // alert("Deleted successful!");
+      notify("success", "Deleted successful!")
       // props.changeFuncNum(props.functionNum - 1)
     }
   });
@@ -118,7 +152,8 @@ function Function(props) {
       setTransferAmount(sendAmount);
       setTransferButtonAvailable(true);
     } else {
-      alert("Not engough fees!")
+      // alert("Not engough fees!")
+      notify("error", "Not engough fees!");
     }
   }
 
@@ -139,7 +174,8 @@ function Function(props) {
 
       const executeRequest = async () => {
         if(transferAmount < estimatecost) {
-          alert("Not enough execution fees!");
+          notify("error", "Not enough execution fees!")
+          // alert("Not enough execution fees!");
           return
         }
         setLoading(true);
@@ -163,6 +199,7 @@ function Function(props) {
         setLoading(false);
         const tx1Url = getEtherscanURL(80001) + "tx/" + latestResponseJson.txHash;
         setL1TxUrl(tx1Url);
+        notify("success", "Execute successful!");
       }
       executeRequest();
     }
@@ -170,6 +207,7 @@ function Function(props) {
 
   return (
     <div>
+      <ToastContainer position="top-left"/>
       {!isopen && (
         <div
           onClick={() => setIsopen(!isopen)}
