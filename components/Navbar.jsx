@@ -20,7 +20,6 @@ function Navbar(props) {
     }
   }, [account.status]);
 
-  function handleclick() {}
 
   return (
     <div className="font-epilogue mx-[1rem] my-4 2xl:mx-[4rem]">

@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <div>
       <Head ssr={true}>
-        <title>Chainlink functions</title>
+        <title>OpenGate</title>
         <link rel="icon" href="/favicon.ico" />
         <meta name="description" content="This is a description of chainlink functions." />
         <meta name="keywords" content="chainlink functions" />
