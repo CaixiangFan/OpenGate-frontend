@@ -52,3 +52,5 @@ yarn start:dev
 ```
 yarn next dev
 ```
+
+![Chainlink historical functions](https://github.com/CaixiangFan/OpenGate-frontend/blob/main/assets/OPenGate.JPG?raw=true)
